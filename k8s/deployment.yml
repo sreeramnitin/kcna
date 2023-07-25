@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mynodeapp
+  labels:
+    app.kubernetes.io/name: mynodeapp
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mynodeapp
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mynodeapp
+    spec:
+      containers:
+      - env:
+        - name: PORT
+          value: "8080"
+        image: public.ecr.aws/s4h2i5l8/mynodeapp:latest
+        imagePullPolicy: Always
+        name: mynodeapp
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 2
